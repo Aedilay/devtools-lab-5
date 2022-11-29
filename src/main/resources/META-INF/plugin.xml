@@ -1,0 +1,15 @@
+<idea-plugin>
+    <id>com.aedilay.comments-aligner</id>
+    <name>Comments-Aligner</name>
+    <vendor email="edgar.sarartovcev@mail.ru"/>
+    <description><![CDATA[Plugin for aligning comments in java, written in kotlin]]></description>
+    <depends>com.intellij.modules.platform</depends>
+    <extensions defaultExtensionNs="com.intellij"/>
+    <actions>
+        <action id="com.aedilay.comments.aligner.CommentsAligner" class="com.aedilay.comments.aligner.CommentsAligner"
+                text="Align Comments">
+            <add-to-group group-id="MainMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt 1"/>
+        </action>
+    </actions>
+</idea-plugin>
