@@ -1,5 +1,6 @@
 package com.aedilay.comments.aligner
 
+import com.aedilay.comments.aligner.configuration.AmogusConfiguration
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -8,6 +9,8 @@ import com.intellij.openapi.ui.Messages
 import org.apache.http.util.TextUtils
 
 class CommentsAligner : AnAction() {
+    private val amogusConfig = AmogusConfiguration.amogusConfiguration
+
     override fun actionPerformed(e: AnActionEvent) {
         val editor = e.getRequiredData(CommonDataKeys.EDITOR)
         val project = e.getRequiredData(CommonDataKeys.PROJECT)
@@ -21,7 +24,7 @@ class CommentsAligner : AnAction() {
         }
 
         val strs = text.split("\n")
-        val longestChatSeq = strs.maxOf { it.length }
+        val longestChatSeq = strs.filter { it.contains("//") } .maxOf { it.substringBefore("//").length - 1 }
         val sb = StringBuilder()
 
         strs.withIndex().forEach {
@@ -37,6 +40,11 @@ class CommentsAligner : AnAction() {
             if (it.index != strs.size - 1)
                 sb.append("\n")
         }
+
+        val randomAmogus = amogusConfig.random().takeUnless { it == amogusConfig[0] }
+            ?: amogusConfig.random()
+
+        sb.append(randomAmogus)
 
         WriteCommandAction.runWriteCommandAction(project) {
             document.setText(sb.toString())
